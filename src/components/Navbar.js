@@ -12,7 +12,7 @@ export default function Navbar(){
     const logout = ()=>{
         localStorage.removeItem('token-info');
         setIsLoggedIn(false);
-       window.location = '/';
+        window.location = '/';
     };
     
     return(
@@ -28,6 +28,7 @@ export default function Navbar(){
                             </button>
                             <div className='collapse navbar-collapse' id='navbarNavDropdown'>
                                 <div className='navbar-nav'>
+                                    <Link to='/Home' className='nav-link active'>Home </Link>
                                     <Link to='/sample' className='nav-link active'>Samples</Link>
                                     <Link to='/customer' className='nav-link active'>Customer</Link>
                                     <Link to='/invoice' className='nav-link active'>Invoice</Link>

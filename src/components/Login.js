@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import HomePage from './Homepage';
+//import HomePage from './Homepage';
 
 export default function Login(props){
     const [employeeId, setEmployeeId] = useState('');
@@ -18,13 +18,8 @@ export default function Login(props){
         setIsLoggedIn(true);
         setEmployeeId('');
         setPassword('');
+        window.location = '/Home';
 
-    };
-
-    const logout = ()=>{
-        localStorage.removeItem('token-info');
-        setIsLoggedIn(false);
-        window.location = '/Login';
     };
 
     return(
@@ -51,7 +46,9 @@ export default function Login(props){
                 </>
              ):(
                 <>
-                    <HomePage/>
+                <div class="alert alert-success" role="alert">
+                    Welcome!!
+                </div>
                 </>
              )}
              
