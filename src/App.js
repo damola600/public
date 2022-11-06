@@ -10,6 +10,9 @@ import AddCustomer from './components/AddCustomer';
 import CustomerList from './components/CustomerList';
 import SampleList from './components/SampleList';
 import AddSample from './components/AddSample';
+import EditCustomer from './components/EditCustomer';
+import EditSample from './components/EditSample';
+import EditInvoice from './components/EditInvoice';
 
 
 function App() {
@@ -21,11 +24,14 @@ function App() {
         <Route path='/Home' element={<HomePage/>}/>
         <Route path="/sample" element={<Sample/>} />
         <Route path="/customer" element={<Customer/>}/>
-        <Route path='/invoice' element={<Invoice/>}/>
+        <Route path='/invoice/:id' element={<Invoice/>}/>
         <Route path='/addcustomer' element={<AddCustomer/>}/>
         <Route path='/customerlist' element={<CustomerList/>}/> 
         <Route path='/samplelist' element={<SampleList/>}/>
         <Route path='/addsample' element={<AddSample/>}/>
+        <Route path="/editcustomer/:id" element={<EditCustomer/>}/>
+        <Route path="/editsample/:id" element={<EditSample/>}/>
+        <Route path='/editinvoice/:id' element={<EditInvoice/>}/>
         <Route path="*" element={() => <h2>404 Not Found </h2>} />
       </Routes>
     </Router>

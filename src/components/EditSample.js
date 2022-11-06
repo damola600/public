@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
 import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css";
 import Navbar from "./Navbar";
 import axios from 'axios';
+import { Link } from "react-router-dom";
 
-export default function AddSample(){
-    const [sampleName, setSampleName] = useState('');
-    const [labno, setlabno] = useState('');
-    const [certno, setcertno] = useState('');
-    const [dateReceived, setDateReceived] = useState(new Date());
-    const [batchno, setBatchno] = useState('');
-    const [prodDate, setProdDate] = useState(new Date());
-    const [expDate, setExpDate] = useState(new Date());
-    const [custName, setCustName] = useState('');
+export default function EditSample(){
+    const [sampleName, setSampleName] = useState("");
+    const [labno, setlabno] = useState("");
+    const [certno, setcertno] = useState("");
+    const [dateReceived, setDateReceived] = useState("");
+    const [batchno, setBatchno] = useState("");
+    const [prodDate, setProdDate] = useState("");
+    const [expDate, setExpDate] = useState("");
+    const [custName, setCustName] = useState("");
     const [customers, setCustomers] = useState([]);
+    
 
     const submit=(e)=>{
         e.preventDefault();
@@ -30,7 +31,7 @@ export default function AddSample(){
 
         localStorage.setItem('token-info', JSON.stringify(sample));
 
-        axios.post("http://localhost:4000/sample/add", sample)
+        axios.post("http://localhost:4000/sample/update", sample)
             .then(res => console.log(res.data))
             .catch((err)=>console.log(err));
 
@@ -43,32 +44,41 @@ export default function AddSample(){
         setcertno('');
         setlabno('');
 
-        window.location = "/samplelist";
+        window.location = '/samplelist';
     }
-
-    const back = () =>{
-        window.location = "/sample";
-    }
-
     
-
     useEffect(()=>{
         axios.get('http://localhost:4000/customer/')
             .then(res =>{
-                setCustomers(res.data.map(customer=>customer.firstname))
+                setCustomers(res.data.map(customer=>customer.custname))
             })
             .catch((err)=>{
                 console.log(err);
             }
         )
 
+        axios.get("http://localhost:4000/sample/find", {params:  {id: certno}})
+            .then(res => {
+                setSampleName(res.data.samplename);
+                setBatchno(res.data.batchno);
+                setlabno(res.data.labno);
+                setcertno(res.data.certno);
+                setDateReceived(res.data.datereceived);
+                setProdDate(res.data.proddate);
+                setExpDate(res.data.expdate);
+                setCustName(res.data.custname);
+            })
+            .catch((err)=>console.log(err));
+
         
     })
 
+
     return(
-        <div>
-        <Navbar/>
-            <h3>Add a new Sample</h3>
+        <div className="container">
+            <Navbar/>
+            <Link to='/samplelist'>back</Link>
+            <h3>Edit Sample Details</h3>
             <form onSubmit={submit}>
                 <div className="form-group">
                     <label>Sample Name</label>
@@ -101,7 +111,10 @@ export default function AddSample(){
                     <input type='text' className="form-control" value={labno} onChange={(e)=>setlabno(e.target.value)}/>
                 </div>
 
-                
+                <div className="form-group">
+                    <label>Cert No:</label>
+                    <input type='number' className="form-control" value={certno} onChange={(e)=>setcertno(e.target.value)}/>
+                </div>
 
                 <div className="form-group">
                     <label>Batch No:</label>
@@ -109,7 +122,7 @@ export default function AddSample(){
                 </div>
 
                 <div className="form-group">
-                    <label>Production Date:</label>
+                    <label>Produuction Date:</label>
                     <DatePicker className="form-control" selected={prodDate} onChange={(e)=>setProdDate(e.target.value)}/> 
                 </div>
 
@@ -120,7 +133,6 @@ export default function AddSample(){
                 <br/>
 
                 <div className="form-group d-grid gap-2 d-md-flex justify-content-md-center">
-                    <input className="btn btn-danger btn-lg" type="submit"  value="Back" onClick={back}/>
                     <input className="btn btn-success btn-lg" type="submit" value="Add"/>
                 </div>
             </form>

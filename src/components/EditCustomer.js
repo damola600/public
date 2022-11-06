@@ -1,19 +1,37 @@
-import React, {useState} from "react";
-import Navbar from "./Navbar";
-import Customer from "./Customer";
 import axios from "axios";
+ import React, { useEffect, useState} from "react";
+import { Link, useParams } from "react-router-dom";
+import Navbar from "./Navbar";
 
-export default function AddCustomer(){
+export default function EditCustomer(){
     const [firstname, setfirstname] = useState('');
     const [lastname, setlastname] = useState('');
     const [companyname, setcompanyname] = useState('');
     const [email, setemail] = useState('');
     const [phonenumber, setphonenumber] = useState('');
     const [address, setaddress] = useState('');
+    const { id } = useParams();
+    console.log(id);
 
-    const submit = (e) =>{
+    
+
+    useEffect(()=>{
+        axios.get("http://localhost:4000/customer/find", {params:  {id: id}})
+            .then(res =>{
+                setfirstname(res.data.firstname);
+                setlastname(res.data.lastname);
+                setaddress(res.data.address);
+                setcompanyname(res.data.companyname);
+                setemail(res.data.email);
+                setphonenumber(res.data.phonenumber);
+            })
+            .catch((err)=>console.log(err));
+    })
+
+    const update=(e)=>{
         e.preventDefault();
         const customer ={
+            id: id,
             firstname: firstname,
             lastname: lastname,
             email: email,
@@ -23,24 +41,19 @@ export default function AddCustomer(){
         };
 
         localStorage.setItem('token-info', JSON.stringify(customer));
-
-        axios.post('http://localhost:4000/customer/add', customer)
-            .then(res => console.log(res.data))
+        axios.post("http://localhost:4000/customer/update", customer)
+            .then(res=>console.log(res.data))
             .catch((err)=>console.log(err));
-    
-        setfirstname('');
-        setlastname('');
-        setaddress('');
-        setcompanyname('');
-        setemail('');
-        setphonenumber('');
+        
         window.location = '/customerlist';
     }
+
     return(
+        
         <div className="container">
             <Navbar/>
-            <h3>Add New Customer</h3>
-            <form onSubmit={submit}>
+            <Link to="/customerlist">Back</Link>
+            <form onSubmit={update}>
                 <div className="form-group">
                     <label>First Name: </label>
                     <input type="text" className='form-control' value={firstname} onChange={(e)=>setfirstname(e.target.value)}/>
@@ -73,10 +86,10 @@ export default function AddCustomer(){
                 <br/>
 
                 <div className="form-group d-grid gap-2 d-md-flex justify-content-md-center">
-                    <input className="btn btn-danger btn-lg" type="submit"  value="Back" onClick={<Customer/>}/>
-                    <input className="btn btn-success btn-lg" type="submit" value="Add"/>
+                    <input className="btn btn-success btn-lg" type="submit" value="Update"/>
                 </div>
             </form>
+              
         </div>
     )
-}
+} 
